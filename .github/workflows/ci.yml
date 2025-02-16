@@ -37,11 +37,11 @@ jobs:
     - name: Upload *.whl
       uses: actions/upload-artifact@v4
       with:
-        name: distribution
+        name: .whl
         path: dist/*.whl
 
     - name: Upload *.tar.gz
       uses: actions/upload-artifact@v4
       with:
-        name: distribution
+        name: .tar.gz
         path: dist/*.tar.gz
