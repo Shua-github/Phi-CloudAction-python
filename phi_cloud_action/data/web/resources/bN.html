@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <meta name="viewport" content="width=device-width">
+    <link rel="shortcut icon" href="/static/resources/html/b19/displayB19.html">
+    <title>pca bN</title>
+    <link rel="stylesheet" type="text/css" href="/static/resources/html/b19/displayB19.css">
+</head>
+
+<body>
+    <div class="background">
+        <img src="/static/ill/illBlur/996.李化禹.png" alt="曲绘"
+            id="bkg">
+    </div>
+    <div class="atitle">
+        <div class="logo" id="logo">
+            <img src="/static/resources/html/otherimg/Phigros_Icon_3.0.0.png" alt="Phigros_Icon_3.0.0">
+            <p name="pvis" style="font-size: 17px;">Phigros RankingScore查询</p>
+        </div>
+        <div class="user" id="user">
+            <div class="userId">
+                <p>{{ username }}</p>
+            </div>
+            <div class="userAva">
+                <img src="/static/resources/html/avatar/{{avatar_name}}.png" alt="avatar">
+            </div>
+            <div class="clg_rks">
+                <div class="webClg">
+                    <img src="/static/resources/html/otherimg/{{ challenge[0] }}.png" alt="Challenge">
+                    <p>{{ challenge[1:] }}</p>
+                </div>
+                <div class="webRks">
+                    <p>{{ userrks }}</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="songBox" id="songBox">
+        {% for song in songs %}
+        <div class="song">
+            <div class="ill-box">
+                <div class="num">
+                    <p>{{ song.num }}</p>
+                </div>
+                <div class="ill">
+                    <img data-src="{{ song.illustration }}" alt="{{ song.song }}" id="songIll{{ song.num }}" src="{{ song.illustration }}">
+                </div>
+                <div class="rank-{{ song.rank }} song_rank">
+                    <div class="org">
+                        <p>{{ song.rank }} {{ song.difficulty }}</p>
+                    </div>
+                    <div class="rel">
+                        <p>{{ song.rks | round(2) }}</p>
+                    </div>
+                </div>
+            </div>
+            <div class="info-{{ song.rank }} song_info">
+                <div class="songname">
+                    <p name="pvis">{{ song.song }}</p>
+                </div>
+                <div class="songinfo">
+                    <div class="Rating">
+                        <img src="/static/resources/html/otherimg/{{ song.Rating }}.png" alt="{{ song.Rating }}">
+                    </div>
+                    <div class="chengji">
+                        <div class="score">
+                            <p>{{ song.score }}</p>
+                        </div>
+                        <div class="line"></div>
+                        <div class="acc-box">
+                            <div class="acc">
+                                <p>{{ song.acc | round(2) }}%</p>
+                            </div>
+                            <div class="suggest">
+                                <p>>> {{ song.suggest }}</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+
+    <script>
+        function adjustFontSize() {
+            function isBiggerThanParent(songName, parentElement) {
+                return songName.scrollWidth > parentElement.offsetWidth || songName.scrollHeight > parentElement.offsetHeight;
+            }
+
+            let a = document.getElementsByName('pvis');
+            for (let i = 0; i < a.length; ++i) {
+                let songName = a[i];
+                if (!songName) continue;
+
+                let parentElement = songName.parentElement;
+                if (!isBiggerThanParent(songName, parentElement)) continue;
+
+                let fontSize = Number(window.getComputedStyle(songName, null).getPropertyValue('font-size').replace("px", ""));
+                let l = 0, r = fontSize;
+                while (l < r) {
+                    let mid = Math.floor((l + r + 1) / 2);
+                    songName.style.fontSize = mid + "px";
+                    if (isBiggerThanParent(songName, parentElement)) {
+                        r = mid - 1;
+                    } else {
+                        l = mid;
+                    }
+                }
+                songName.style.fontSize = l + "px";
+            }
+        }
+
+        (function (win, doc) {
+            'use strict';
+            let options = { dpr: win.devicePixelRatio };
+            let html = doc.documentElement, dpr = html.getAttribute('data-dpr') || options.dpr;
+            let viewPort = doc.querySelector('meta[name="viewport"]');
+            let rotate = win.onorientationchange ? 'orientationchange' : 'resize';
+
+            function setSize() {
+                let winWidth = win.innerWidth || html.clientWidth;
+                html.style.fontSize = 100 * winWidth / (window.innerWidth > window.innerHeight ? 4096 : 2048) + 'px';
+                adjustFontSize();
+            };
+
+            function setScale() {
+                setSize();
+                let viewContent = viewPort.getAttribute('content');
+                let reg = /initial-scale=(\d(.\d+)?)/i;
+                let matchRes = viewContent.match(reg);
+                let scale = 1 / parseInt(dpr);
+                if (matchRes && matchRes[1] == scale) {
+                    return;
+                }
+                let newContent = viewContent.replace(reg, function (a, b) {
+                    return a.replace(/\d(.\d+)?/i, scale);
+                });
+                viewPort.setAttribute('content', newContent);
+            };
+
+            win.addEventListener(rotate, setSize);
+            window.requestAnimationFrame = window.requestAnimationFrame || window.webkitRequestAnimationFrame;
+            requestAnimationFrame(setScale);
+        }(window, document));
+            // 懒加载函数：检查图片是否在视口内
+            function lazyLoad() {
+            const lazyImages = document.querySelectorAll('.lazy-load');
+
+            lazyImages.forEach((img) => {
+                if (img.getBoundingClientRect().top < window.innerHeight && img.getBoundingClientRect().bottom > 0) {
+                    // 图片进入视口时，加载图片
+                    img.src = img.getAttribute('data-src');
+                    img.onload = function () {
+                        img.style.opacity = 1;
+                    };
+                    img.classList.remove('lazy-load');
+                }
+            });
+        }
+
+        window.addEventListener('scroll', lazyLoad);
+        window.addEventListener('resize', lazyLoad);
+
+        // 初次加载页面时，执行懒加载
+        window.addEventListener('load', lazyLoad);
+
+        // 调整字体大小
+        window.addEventListener('load', adjustFontSize);
+        window.addEventListener('resize', adjustFontSize);
+    </script>
+</body>
+</html>

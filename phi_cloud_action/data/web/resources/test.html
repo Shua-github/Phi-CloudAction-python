@@ -1,0 +1,228 @@
+{% block css %}
+<link rel="stylesheet" href="{{ _res_path }}html/b19/b19.css">
+<link rel="stylesheet" href="{{ _res_path }}html/b19/b19title.css">
+{% endblock %}
+
+{% block main %}
+
+<div class="background">
+    <img src="{{_res_path}}html/otherimg/Star1.png" alt="曲绘-模糊">
+    <img src="{{_res_path}}html/otherimg/Star2.png" alt="曲绘-模糊"
+        style="min-height: 0;width: 100%;height: auto;bottom: 0;filter: none;">
+</div>
+
+<div class="title">
+    <div class="l">
+        <img src="{{ _res_path }}html/otherimg/Phigros_Icon_3.0.0.png" alt="icon">
+        <div class="doc">
+            <p>Phigros</p>
+            <p>RankingScore查询</p>
+        </div>
+    </div>
+    <div class="r">
+        <p>Player: {{ gameuser.PlayerId }}</p>
+        <p>RankingScore: {{ gameuser.rks | round(4) }}</p>
+        <div class="Challenge">
+            <p>ChallengeMode:</p>
+            {% if gameuser.dan %}
+            <div class="CLG {{ 'colorful' if gameuser.dan.EX else '' }}">
+                <p>{{ gameuser.dan.Dan }}</p>
+            </div>
+            {% endif %}
+            <div class="Challenge-r">
+                <img src="{{ _res_path }}html/otherimg/{{ gameuser.ChallengeMode }}.png" alt="Challenge">
+                <p>{{ gameuser.ChallengeModeRank }}</p>
+            </div>
+        </div>
+        {% if gameuser.data %}
+        <p>Data: {{ gameuser.data }}</p>
+        {% endif %}
+        <p>Date: {{ Date }}</p>
+    </div>
+</div>
+
+<div class="b19">
+    {% for song in phi %}
+        {% if song %}
+        <div class="song">
+            <div class="ill-box">
+                <div class="num">
+                    <p name="pvis">P{{ loop.index }}</p>
+                </div>
+                <div class="ill">
+                    <img src="{{ song.illustration }}" alt="ill">
+                </div>
+                <div class="rank-{{ song.rank }}">
+                    <div class="org">
+                        <p>{{ song.rank }}&ensp;{{ song.difficulty }}</p>
+                    </div>
+                    <div class="rel">
+                        <p>{{ song.rks | round(2) }}</p>
+                    </div>
+                </div>
+            </div>
+            <div class="info-{{ song.rank }}">
+                <div class="songname">
+                    <p name="pvis">{{ song.song }}</p>
+                </div>
+                <div class="songinfo">
+                    <div class="Rating">
+                        <img src="{{ _res_path }}html/otherimg/{{ song.Rating }}.png" alt="{{ song.Rating }}">
+                    </div>
+                    <div class="chengji">
+                        <div class="score">
+                            <p>{{ song.score }}</p>
+                        </div>
+                        <div class="line"></div>
+                        <div class="acc-box">
+                            <div class="acc">
+                                <p>{{ song.acc | round(2) }}%</p>
+                            </div>
+                            <div class="suggest">
+                                <p>>> {{ song.suggest }}</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% else %}
+        <div class="Nosignal">
+            <div class="border_corner border_corner_left_top"></div>
+            <div class="border_corner border_corner_right_top"></div>
+            <div class="border_corner border_corner_left_bottom"></div>
+            <div class="border_corner border_corner_right_bottom"></div>
+            <div class="line"></div>
+            <div class="timeout">
+                <p>TIME_OUT</p>
+            </div>
+            <div class="client">
+                <p>>>> PhigrOS Client Finding Phi.score</p>
+            </div>
+            <div class="sqrt"></div>
+        </div>
+        {% endif %}
+    {% endfor %}
+
+    {% for song in b19_list %}
+        {% if loop.index == 28 %}
+        <div class="over_flow">
+            <div class="flow_line_box_l">
+                <div class="flow_line"></div>
+                <div class="flow_line"></div>
+                <div class="flow_line"></div>
+                <div class="flow_line"></div>
+                <div class="flow_line"></div>
+                <div class="flow_line"></div>
+            </div>
+            <p><i>OVER FLOW</i></p>
+            <div class="flow_line_box_r">
+                <div class="flow_line"></div>
+                <div class="flow_line"></div>
+                <div class="flow_line"></div>
+                <div class="flow_line"></div>
+                <div class="flow_line"></div>
+                <div class="flow_line"></div>
+            </div>
+        </div>
+        {% endif %}
+
+        <div class="song">
+            <div class="ill-box">
+                <div class="num">
+                    <p name="pvis">{{ song.num }}</p>
+                </div>
+                <div class="ill">
+                    <img src="{{ song.illustration }}" alt="ill">
+                </div>
+                <div class="rank-{{ song.rank }}">
+                    <div class="org">
+                        <p>{{ song.rank }}&ensp;{{ song.difficulty }}</p>
+                    </div>
+                    <div class="rel">
+                        <p>{{ song.rks | round(2) }}</p>
+                    </div>
+                </div>
+            </div>
+            <div class="info-{{ song.rank }}">
+                <div class="songname">
+                    <p name="pvis">{{ song.song }}</p>
+                </div>
+                <div class="songinfo">
+                    <div class="Rating">
+                        <img src="{{ _res_path }}html/otherimg/{{ song.Rating }}.png" alt="{{ song.Rating }}">
+                    </div>
+                    <div class="chengji">
+                        <div class="score">
+                            <p>{{ song.score }}</p>
+                        </div>
+                        <div class="line"></div>
+                        <div class="acc-box">
+                            <div class="acc">
+                                <p>{{ song.acc | round(2) }}%</p>
+                            </div>
+                            <div class="suggest">
+                                <p>>> {{ song.suggest }}</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    {% endfor %}
+</div>
+
+<div class="createdbox">
+    <div class="phi-plugin" style="text-align: center;">
+        <p>{{ Version.phi_plugin|safe }}</p>
+    </div>
+    <div class="ver" style="text-align: center;">
+        <p>{{ Version.ver|safe }}</p>
+    </div>
+</div>
+
+<canvas id="stars"></canvas>
+<script src="{{_res_path}}html/common/star.js"></script>
+
+<!-- 曲目名称自适应name-box的宽度 -->
+<script>  
+    function adjustFontSize() {
+        //获取p元素
+        var a = document.getElementsByName('pvis')
+        for (var i = 0; i < a.length; ++i) {
+
+            const songName = a[i]
+
+            if (!songName) continue
+
+
+            /*调整曲目名称字体大小*/
+            var parentElement = songName.parentElement
+
+            var maxFontSize = 30 //设置最大字体大小
+
+            //如果字体宽度小于父元素宽度，则增大字体大小
+            while (songName.scrollWidth < parentElement.offsetWidth && songName.scrollHeight < parentElement.offsetHeight) {
+                var style = window.getComputedStyle(songName, null).getPropertyValue('font-size')
+                var fontSize = parseFloat(style)
+
+                //检查是否已经达到最大字体大小
+                if (fontSize >= maxFontSize) {
+                    break
+                }
+
+                songName.style.fontSize = (fontSize + 1) + "px"
+            }
+
+            // 如果字体宽度大于父元素宽度，则减小字体大小
+            while (songName.scrollWidth > parentElement.offsetWidth || songName.scrollHeight > parentElement.offsetHeight) {
+                var style = window.getComputedStyle(songName, null).getPropertyValue('font-size')
+                var fontSize = parseFloat(style);
+                songName.style.fontSize = (fontSize - 1) + "px";
+            }
+        }
+    }
+    window.onload = adjustFontSize
+    window.onresize = adjustFontSize
+</script>
+{% endblock %}
